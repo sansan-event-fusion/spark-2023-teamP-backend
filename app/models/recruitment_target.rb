@@ -1,0 +1,2 @@
+class RecruitmentTarget < ApplicationRecord
+end
