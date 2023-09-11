@@ -1,3 +1,3 @@
 class Recruitment < ApplicationRecord
-  mount_uploader :image, RecruitmentUploader
+  mount_uploader :image, RecruitmentImageUploader
 end
