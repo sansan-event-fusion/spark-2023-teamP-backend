@@ -40,15 +40,12 @@ class RecruitmentsController < ApplicationController
       recruitment: {
         area: recruitment.area,
         title: recruitment.title,
-        targets: [
-          {
-            title: recruitment.title
-          }
-        ],
+        targets: recruitment.recruitment_targets.map {|target| target.title},
         description: recruitment.description,
         peopleLimit: recruitment.people_limit,
         participantsCount: recruitment.participants_count
-      }
+      },
+      
     }
     return custom_data
   end

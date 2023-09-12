@@ -20,3 +20,14 @@ recruitments = Recruitment.create([
     {user_id: 4, title: "英会話勉強会", description: "英会話勉強したい人募集してます", image:File.open("./app/assets/images/english.jpg"), area: "沖縄", people_limit: "8", participants_count: "5"},
     {user_id: 1, title: "セキュリティ勉強会", description: "レベル高め", image:File.open("./app/assets/images/study.jpg"), area: "北海道", people_limit: "5", participants_count: "5"},
 ])
+
+recruitment_targets = RecruitmentTarget.create([
+    {recruitment_id: 1, title: "学生"},
+    {recruitment_id: 1, title: "楽しくワイワイ"},
+    {recruitment_id: 2, title: "誰でも歓迎"},
+    {recruitment_id: 3, title: "社会人"},
+    {recruitment_id: 3, title: "楽しくワイワイ"},
+    {recruitment_id: 4, title: "社会人"},
+    {recruitment_id: 4, title: "ハイレベル"},
+]) 
+
