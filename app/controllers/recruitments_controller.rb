@@ -1,11 +1,11 @@
 class RecruitmentsController < ApplicationController
+  before_action :set_recruitment, only: [:show, :apply]
   def index
-    @recruitments = Recruitment.all
-    render json: convert_to_custom_format(@recruitments)
+    recruitments = Recruitment.all
+    render json: convert_to_custom_format(recruitments)
   end
 
   def show
-    @recruitment = Recruitment.find(params[:id])
     render json: convert_to_custom_format_show(@recruitment)
   end
 
@@ -45,16 +45,18 @@ class RecruitmentsController < ApplicationController
   def convert_to_custom_format(recruitments)
     custom_data = recruitments.map do |recruitment|
       {
-        id: recruitment.id,
-        image: recruitment.image,
-        title: recruitment.title,
         organizer: {
+          id: recruitment.user_id,
           name: recruitment.user.name,
-          profileImage: recruitment.user.profile_image
+          profileImageUrl: recruitment.user.profile_image.file.file
         },
-        createdAt: recruitment.created_at,
+        id: recruitment.id,
+        imageUrl: recruitment.image.file.file,
+        title: recruitment.title,
         peopleLimit: recruitment.people_limit,
-        participantsCount: recruitment.participants_count
+        participantsCount: recruitment.participants_count,
+        createdAt: recruitment.created_at,
+        updatedAt: recruitment.updated_at
       }
     end
     return custom_data
@@ -66,7 +68,7 @@ class RecruitmentsController < ApplicationController
       organizer: {
         id: recruitment.user_id,
         name: recruitment.user.name,
-        image: recruitment.user.profile_image
+        imageUrl: recruitment.user.profile_image.file.file
       },
       recruitment: {
         area: recruitment.area,
@@ -74,9 +76,10 @@ class RecruitmentsController < ApplicationController
         targets: recruitment.recruitment_targets.map {|target| target.title},
         description: recruitment.description,
         peopleLimit: recruitment.people_limit,
-        participantsCount: recruitment.participants_count
+        participantsCount: recruitment.participants_count,
+        createdAt: recruitment.created_at,
+        updatedAt: recruitment.updated_at
       },
-      
     }
     return custom_data
   end
