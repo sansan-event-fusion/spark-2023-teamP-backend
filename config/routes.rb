@@ -1,9 +1,7 @@
 Rails.application.routes.draw do
   mount_devise_token_auth_for 'User', at: 'auth'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Defines the root path route ("/")
-  # root "articles#index"
-  resources :recruitments
-  resources :users
+  resources :recruitments, only: [:index, :show, :create]
+  post 'recruitment/:id/apply' => 'recruitments#apply'
+  resources :users, only: [:show]
 end
