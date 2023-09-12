@@ -23,13 +23,13 @@ class RecruitmentsController < ApplicationController
   end
 
   def apply
-    participant = @recruitment.participants.new(params[:user_id])
+    participant = @recruitment.participants.new(params[:userId])
     if participant.save
       render json: { status: 'SUCCESS' }
     else
       render json: { status: 'ERROR', data: participant.errors }
     end
-
+  end
   private
 
   def set_recruitment
@@ -37,9 +37,11 @@ class RecruitmentsController < ApplicationController
   end
 
   def recruitment_params
+    params.deep_transform_keys!(&:underscore)
     params.permit(:user_id, :title, :description, :area, :people_limit, :image)
+
   end
-end
+
   def convert_to_custom_format(recruitments)
     custom_data = recruitments.map do |recruitment|
       {
@@ -50,7 +52,7 @@ end
           name: recruitment.user.name,
           profileImage: recruitment.user.profile_image
         },
-        created_at: recruitment.created_at,
+        createdAt: recruitment.created_at,
         peopleLimit: recruitment.people_limit,
         participantsCount: recruitment.participants_count
       }

@@ -1,13 +1,13 @@
 class UsersController < ApplicationController
     def show
         @user = User.find(params[:id])
-        render json: convert_to_custom_format(@user)
+        render json: convertToCustomFormat(@user)
     end
 
     private
 
-    def convert_to_custom_format(user)
-        custom_data = 
+    def convertToCustomFormat(user)
+        customData = 
         {
           id: user.id,
           name: user.name,
@@ -15,6 +15,6 @@ class UsersController < ApplicationController
           birthday: user.birthday,
           introduction: user.introduction
         }
-        return custom_data
+        return customData
     end
 end
