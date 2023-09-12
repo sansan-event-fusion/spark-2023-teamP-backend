@@ -8,4 +8,5 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   mount_uploader :profile_image, ProfileImageUploader
+  has_many :recruitments
 end
