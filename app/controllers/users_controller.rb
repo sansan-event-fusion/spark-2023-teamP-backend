@@ -12,7 +12,7 @@ class UsersController < ApplicationController
           id: user.id,
           name: user.name,
           birthday: user.birthday,
-          introduction: user.introduction
+          introduction: user.introduction,
           profile_imageUrl: user.profile_image.file.file
         }
         return customData
