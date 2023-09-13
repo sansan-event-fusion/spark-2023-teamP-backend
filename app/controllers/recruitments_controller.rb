@@ -48,13 +48,13 @@ class RecruitmentsController < ApplicationController
         organizer: {
           id: recruitment.user_id,
           name: recruitment.user.name,
-          profileImageUrl: recruitment.user.profile_image.file.file
+          profileImageUrl: recruitment.user.profile_image.url
         },
         id: recruitment.id,
-        imageUrl: recruitment.image.file.file,
         title: recruitment.title,
         peopleLimit: recruitment.people_limit,
         participantsCount: recruitment.participants_count,
+        imageUrl: recruitment.image.url,
         createdAt: recruitment.created_at,
         updatedAt: recruitment.updated_at
       }
@@ -68,7 +68,7 @@ class RecruitmentsController < ApplicationController
       organizer: {
         id: recruitment.user_id,
         name: recruitment.user.name,
-        imageUrl: recruitment.user.profile_image.file.file
+        imageUrl: recruitment.user.profile_image.url
       },
       recruitment: {
         area: recruitment.area,
@@ -77,6 +77,7 @@ class RecruitmentsController < ApplicationController
         description: recruitment.description,
         peopleLimit: recruitment.people_limit,
         participantsCount: recruitment.participants_count,
+        imageUrl: recruitment.image.url,
         createdAt: recruitment.created_at,
         updatedAt: recruitment.updated_at
       },
