@@ -24,4 +24,5 @@ class Recruitment < ApplicationRecord
       recruitment_target = RecruitmentTarget.create(recruitment_id: self.id, title: target)
       recruitment_target.errors unless recruitment_target.persisted?
     end.compact
+  end
 end

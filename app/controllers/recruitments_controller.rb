@@ -25,7 +25,7 @@ class RecruitmentsController < ApplicationController
   end
 
   def apply
-    participant = @recruitment.participants.new(params[:user_id])
+    participant = @recruitment.participants.new(user_id: params[:userId])
     if participant.save
       render json: { status: 'SUCCESS' }
     else
@@ -40,29 +40,6 @@ class RecruitmentsController < ApplicationController
       results = results.or(Recruitment.left_joins(:recruitment_targets).distinct.search(keyword))
     end
     render json: convert_to_custom_format(results)
-  end
-
-  def create
-    recruitment = Recruitment.new(recruitment_params)
-    if recruitment.save
-      err = recruitment.save_targets(params[:targets])
-      if err.empty?
-        render json: { status: 'SUCCESS' }
-      else
-        render json: { status: 'ERROR', data: err }
-      end
-    else
-      render json: { status: 'ERROR', data: recruitment.errors }
-    end
-  end
-
-  def apply
-    participant = @recruitment.participants.new(params[:userId])
-    if participant.save
-      render json: { status: 'SUCCESS' }
-    else
-      render json: { status: 'ERROR', data: participant.errors }
-    end
   end
   private
 
