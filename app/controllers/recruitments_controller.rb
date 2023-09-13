@@ -86,6 +86,7 @@ class RecruitmentsController < ApplicationController
         },
         id: recruitment.id,
         title: recruitment.title,
+        targets: recruitment.recruitment_targets.map {|target| target.title},
         peopleLimit: recruitment.people_limit,
         participantsCount: recruitment.participants_count,
         imageUrl: recruitment.image.url,
