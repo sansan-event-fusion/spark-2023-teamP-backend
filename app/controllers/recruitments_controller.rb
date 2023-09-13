@@ -1,15 +1,55 @@
 class RecruitmentsController < ApplicationController
   def index
-    @recruitments = Recruitment.all
-    render json: convert_to_custom_format(@recruitments)
+    recruitments = Recruitment.all
+    render json: convert_to_custom_format(recruitments)
   end
 
   def show
-    @recruitment = Recruitment.find(params[:id])
-    render json: convert_to_custom_format_show(@recruitment)
+    recruitment = Recruitment.find(params[:id])
+    render json: convert_to_custom_format_show(recruitment)
+  end
+
+  def create
+    recruitment = Recruitment.new(recruitment_params)
+    if recruitment.save
+      err = recruitment.save_targets(params[:targets])
+      if err.empty?
+        render json: { status: 'SUCCESS' }
+      else
+        render json: { status: 'ERROR', data: err }
+      end
+    else
+      render json: { status: 'ERROR', data: recruitment.errors }
+    end
+  end
+
+  def apply
+    participant = @recruitment.participants.new(params[:user_id])
+    if participant.save
+      render json: { status: 'SUCCESS' }
+    else
+      render json: { status: 'ERROR', data: participant.errors }
+    end
+  end
+
+  def search
+    keywords = params[:keyword].split(/[[:blank:]]+/)
+    results = Recruitment.none
+    keywords.each do |keyword|
+      results = results.or(Recruitment.left_joins(:recruitment_targets).distinct.search(keyword))
+    end
+    render json: convert_to_custom_format(results)
   end
 
   private
+
+  def set_recruitment
+    @recruitment = Recruitment.find(params[:id])
+  end
+
+  def recruitment_params
+    params.permit(:user_id, :title, :description, :area, :people_limit, :image)
+  end
 
   def convert_to_custom_format(recruitments)
     custom_data = recruitments.map do |recruitment|
@@ -30,7 +70,7 @@ class RecruitmentsController < ApplicationController
   end
 
   def convert_to_custom_format_show(recruitment)
-    custom_data = 
+    custom_data =
     {
       organizer: {
         id: recruitment.user_id,
@@ -44,10 +84,9 @@ class RecruitmentsController < ApplicationController
         description: recruitment.description,
         peopleLimit: recruitment.people_limit,
         participantsCount: recruitment.participants_count
-      },
-      
+      }
     }
     return custom_data
   end
-  
+
 end

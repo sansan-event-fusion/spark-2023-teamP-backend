@@ -29,5 +29,5 @@ recruitment_targets = RecruitmentTarget.create([
     {recruitment_id: 3, title: "楽しくワイワイ"},
     {recruitment_id: 4, title: "社会人"},
     {recruitment_id: 4, title: "ハイレベル"},
-]) 
+])
 
