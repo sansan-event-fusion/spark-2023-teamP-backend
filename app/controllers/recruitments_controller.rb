@@ -1,4 +1,5 @@
 class RecruitmentsController < ApplicationController
+  before_action :set_recruitment, only: [:show, :apply]
   def index
     recruitments = Recruitment.all
     render json: convert_to_custom_format(recruitments)
@@ -41,6 +42,27 @@ class RecruitmentsController < ApplicationController
     render json: convert_to_custom_format(results)
   end
 
+  def create
+    recruitment = Recruitment.new(recruitment_params)
+    if recruitment.save
+      err = recruitment.save_targets(params[:targets])
+      if err
+        render json: { status: 'ERROR', data: err }
+      end
+      render json: { status: 'SUCCESS' }
+    else
+      render json: { status: 'ERROR', data: recruitment.errors }
+    end
+  end
+
+  def apply
+    participant = @recruitment.participants.new(params[:userId])
+    if participant.save
+      render json: { status: 'SUCCESS' }
+    else
+      render json: { status: 'ERROR', data: participant.errors }
+    end
+  end
   private
 
   def set_recruitment
@@ -48,22 +70,30 @@ class RecruitmentsController < ApplicationController
   end
 
   def recruitment_params
+<<<<<<< HEAD
     params.permit(:user_id, :title, :description, :area, :people_limit, :image)
+=======
+    params.deep_transform_keys!(&:underscore)
+    params.permit(:user_id, :title, :description, :area, :people_limit, :image)
+
+>>>>>>> develop
   end
 
   def convert_to_custom_format(recruitments)
     custom_data = recruitments.map do |recruitment|
       {
-        id: recruitment.id,
-        image: recruitment.image,
-        title: recruitment.title,
         organizer: {
+          id: recruitment.user_id,
           name: recruitment.user.name,
-          profileImage: recruitment.user.profile_image
+          profileImageUrl: recruitment.user.profile_image.url
         },
-        created_at: recruitment.created_at,
+        id: recruitment.id,
+        title: recruitment.title,
         peopleLimit: recruitment.people_limit,
-        participantsCount: recruitment.participants_count
+        participantsCount: recruitment.participants_count,
+        imageUrl: recruitment.image.url,
+        createdAt: recruitment.created_at,
+        updatedAt: recruitment.updated_at
       }
     end
     return custom_data
@@ -75,7 +105,7 @@ class RecruitmentsController < ApplicationController
       organizer: {
         id: recruitment.user_id,
         name: recruitment.user.name,
-        image: recruitment.user.profile_image
+        imageUrl: recruitment.user.profile_image.url
       },
       recruitment: {
         area: recruitment.area,
@@ -83,8 +113,16 @@ class RecruitmentsController < ApplicationController
         targets: recruitment.recruitment_targets.map {|target| target.title},
         description: recruitment.description,
         peopleLimit: recruitment.people_limit,
+<<<<<<< HEAD
         participantsCount: recruitment.participants_count
       }
+=======
+        participantsCount: recruitment.participants_count,
+        imageUrl: recruitment.image.url,
+        createdAt: recruitment.created_at,
+        updatedAt: recruitment.updated_at
+      },
+>>>>>>> develop
     }
     return custom_data
   end
