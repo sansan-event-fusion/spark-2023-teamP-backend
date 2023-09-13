@@ -6,17 +6,51 @@ class RecruitmentsController < ApplicationController
   end
 
   def show
-    render json: convert_to_custom_format_show(@recruitment)
+    recruitment = Recruitment.find(params[:id])
+    render json: convert_to_custom_format_show(recruitment)
   end
 
   def create
     recruitment = Recruitment.new(recruitment_params)
     if recruitment.save
       err = recruitment.save_targets(params[:targets])
-      if err
+      if err.empty?
+        render json: { status: 'SUCCESS' }
+      else
         render json: { status: 'ERROR', data: err }
       end
+    else
+      render json: { status: 'ERROR', data: recruitment.errors }
+    end
+  end
+
+  def apply
+    participant = @recruitment.participants.new(params[:user_id])
+    if participant.save
       render json: { status: 'SUCCESS' }
+    else
+      render json: { status: 'ERROR', data: participant.errors }
+    end
+  end
+
+  def search
+    keywords = params[:keyword].split(/[[:blank:]]+/)
+    results = Recruitment.none
+    keywords.each do |keyword|
+      results = results.or(Recruitment.left_joins(:recruitment_targets).distinct.search(keyword))
+    end
+    render json: convert_to_custom_format(results)
+  end
+
+  def create
+    recruitment = Recruitment.new(recruitment_params)
+    if recruitment.save
+      err = recruitment.save_targets(params[:targets])
+      if err.empty?
+        render json: { status: 'SUCCESS' }
+      else
+        render json: { status: 'ERROR', data: err }
+      end
     else
       render json: { status: 'ERROR', data: recruitment.errors }
     end
@@ -48,13 +82,13 @@ class RecruitmentsController < ApplicationController
         organizer: {
           id: recruitment.user_id,
           name: recruitment.user.name,
-          profileImageUrl: recruitment.user.profile_image.file.file
+          profileImageUrl: recruitment.user.profile_image.url
         },
         id: recruitment.id,
-        imageUrl: recruitment.image.file.file,
         title: recruitment.title,
         peopleLimit: recruitment.people_limit,
         participantsCount: recruitment.participants_count,
+        imageUrl: recruitment.image.url,
         createdAt: recruitment.created_at,
         updatedAt: recruitment.updated_at
       }
@@ -68,7 +102,7 @@ class RecruitmentsController < ApplicationController
       organizer: {
         id: recruitment.user_id,
         name: recruitment.user.name,
-        imageUrl: recruitment.user.profile_image.file.file
+        imageUrl: recruitment.user.profile_image.url
       },
       recruitment: {
         area: recruitment.area,
@@ -77,6 +111,7 @@ class RecruitmentsController < ApplicationController
         description: recruitment.description,
         peopleLimit: recruitment.people_limit,
         participantsCount: recruitment.participants_count,
+        imageUrl: recruitment.image.url,
         createdAt: recruitment.created_at,
         updatedAt: recruitment.updated_at
       },
