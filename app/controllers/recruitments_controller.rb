@@ -17,7 +17,7 @@ class RecruitmentsController < ApplicationController
       if err.present?
         render json: { status: 'ERROR', data: err }
       else
-        render json: { status: 'SUCCESS' }       
+        render json: { status: 'SUCCESS' }
       end
     else
       render json: { status: 'ERROR', data: recruitment.errors }
@@ -106,6 +106,7 @@ class RecruitmentsController < ApplicationController
         createdAt: recruitment.created_at,
         updatedAt: recruitment.updated_at
       },
+      participantIds: recruitment.participants.map {|participant| participant.id}
     }
     return custom_data
   end
