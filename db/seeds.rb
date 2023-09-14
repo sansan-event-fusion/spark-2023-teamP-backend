@@ -22,12 +22,15 @@ recruitments = Recruitment.create([
 ])
 
 recruitment_targets = RecruitmentTarget.create([
-    {recruitment_id: 1, title: "学生"},
-    {recruitment_id: 1, title: "楽しくワイワイ"},
-    {recruitment_id: 2, title: "誰でも歓迎"},
-    {recruitment_id: 3, title: "社会人"},
-    {recruitment_id: 3, title: "楽しくワイワイ"},
-    {recruitment_id: 4, title: "社会人"},
-    {recruitment_id: 4, title: "ハイレベル"},
+    {recruitment_id: 1, title: "学生限定"},
+    {recruitment_id: 1, title: "コーダー大歓迎"},
+    {recruitment_id: 2, title: "社会人大歓迎"},
+    {recruitment_id: 2, title: "誰でも！"},
+    {recruitment_id: 3, title: "初心者大歓迎"},
+    {recruitment_id: 3, title: "ゆるーく"},
+    {recruitment_id: 4, title: "誰でも！"},
+    {recruitment_id: 4, title: "オンライン"},
+    {recruitment_id: 5, title: "社会人大歓迎"},
+    {recruitment_id: 5, title: "ガチ🔥"}
 ])
 
