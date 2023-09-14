@@ -106,7 +106,7 @@ class RecruitmentsController < ApplicationController
         createdAt: recruitment.created_at,
         updatedAt: recruitment.updated_at
       },
-      participantIds: recruitment.participants.map {|participant| participant.id}
+      participantIds: recruitment.participants.map {|participant| participant.user_id}
     }
     return custom_data
   end
