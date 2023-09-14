@@ -14,10 +14,10 @@ class RecruitmentsController < ApplicationController
     recruitment = Recruitment.new(recruitment_params)
     if recruitment.save
       err = recruitment.save_targets(params[:targets])
-      if err.empty?
-        render json: { status: 'SUCCESS' }
-      else
+      if err.present?
         render json: { status: 'ERROR', data: err }
+      else
+        render json: { status: 'SUCCESS' }       
       end
     else
       render json: { status: 'ERROR', data: recruitment.errors }
