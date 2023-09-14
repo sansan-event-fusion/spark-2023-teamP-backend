@@ -34,10 +34,23 @@ class RecruitmentsController < ApplicationController
   end
 
   def search
-    keywords = params[:keyword].split(/[[:blank:]]+/)
     results = Recruitment.none
-    keywords.each do |keyword|
-      results = results.or(Recruitment.left_joins(:recruitment_targets).distinct.search(keyword))
+    if params[:targets]
+      targets = params[:targets]
+      recruitments = Recruitment.joins(:recruitment_targets).where(recruitment_targets: { title: targets[0] }).distinct
+      recruitments.map do |recruitment|
+        recruitment_titles = recruitment.recruitment_targets.pluck(:title)
+        results = results.or(Recruitment.where(id: recruitment.id)) if (targets - recruitment_titles).empty?
+      end
+      search_target = results
+    else
+      search_target = Recruitment.left_joins(:recruitment_targets).distinct
+    end
+    if params[:keyword]
+      keywords = params[:keyword].split(/[[:blank:]]+/)
+      keywords.each do |keyword|
+        results = results.or(search_target.search(keyword))
+      end
     end
     render json: convert_to_custom_format(results)
   end
